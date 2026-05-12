@@ -100,11 +100,13 @@ walk(pagetable_t pagetable, uint64 va, int alloc)
   if(va >= MAXVA)
     panic("walk");
 
-  for(int level = 2; level > 0; level--) {
+  for(int level = 2; level > 0; level--) 
+  {
     pte_t *pte = &pagetable[PX(level, va)];
     if(*pte & PTE_V) {
       pagetable = (pagetable_t)PTE2PA(*pte);
-    } else {
+    } 
+    else {
       if(!alloc || (pagetable = (pde_t*)kalloc()) == 0)
         return 0;
       memset(pagetable, 0, PGSIZE);
@@ -142,8 +144,7 @@ walkaddr(pagetable_t pagetable, uint64 va)
 // va and size MUST be page-aligned.
 // Returns 0 on success, -1 if walk() couldn't
 // allocate a needed page-table page.
-int
-mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
+int mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
 {
   uint64 a, last;
   pte_t *pte;
@@ -159,7 +160,8 @@ mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm)
   
   a = va;
   last = va + size - PGSIZE;
-  for(;;){
+  for(;;)
+  {
     if((pte = walk(pagetable, a, 1)) == 0)
       return -1;
     if(*pte & PTE_V)
